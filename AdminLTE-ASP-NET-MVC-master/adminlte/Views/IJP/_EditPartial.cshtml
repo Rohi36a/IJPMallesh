@@ -1,0 +1,105 @@
+﻿@model adminlte.Models.IJPDetailModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Edit Asset</h4>
+        </div>
+        @using (Ajax.BeginForm("Edit", "IJP", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "UpdateAssetSuccess" }, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Job, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Job)
+                            @Html.ValidationMessageFor(model => model.Job)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Experience, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Experience)
+                            @Html.ValidationMessageFor(model => model.Experience)
+                        </div>
+                    </div>
+
+                    @*<div class="form-group">
+                        @Html.LabelFor(model => model.LastDate, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.LastDate)
+                            @Html.ValidationMessageFor(model => model.LastDate)
+                        </div>
+                    </div>*@
+
+                    <div class="form-group input-group-sm">
+                        @Html.LabelFor(model => model.LastDate, new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @*@Html.LabelFor(model => model.LastDate)*@
+                            @Html.TextBoxFor(model => model.LastDate, new { @class = "form-control datepicker", placeholder = "Enter Drop-off date here..." })
+                            @Html.ValidationMessageFor(model => model.LastDate)
+                        </div>
+                     </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicationReceived, new { @class = "control-label col-md-2" })
+                        @*<div class="col-md-10">
+                            @Html.EditorFor(model => model.ApplicationReceived)
+                            @Html.ValidationMessageFor(model => model.ApplicationReceived)
+                        </div>*@
+                        <div class="col-md-4">
+                            @*@Html.LabelFor(model => model.LastDate)*@
+                            @Html.TextBoxFor(model => model.ApplicationReceived, new { @class = "form-control datepicker", placeholder = "Enter Drop-off date here..." })
+                            @Html.ValidationMessageFor(model => model.ApplicationReceived)
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Quantity)
+                            @Html.ValidationMessageFor(model => model.Quantity)
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.StatusId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.StatusId, Model.StatusSelectList, "Select One", new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save changes" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(function () { // will trigger when the document is ready
+        $('.datepicker').datepicker(); //Initialise any date pickers
+    });
+</script>
