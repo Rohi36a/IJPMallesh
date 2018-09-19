@@ -4277,6 +4277,8 @@
     <Content Include="Views\IJP\_AdvancedSearchPartial.cshtml" />
     <Content Include="Views\IJP\_CreatePartial.cshtml" />
     <Content Include="Views\IJP\_EditPartial.cshtml" />
+    <Content Include="Views\IJP\_detailsPartial.cshtml" />
+    <Content Include="Views\IJP\_DeletePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -73,9 +73,9 @@ namespace adminlte.Controllers
             }
 
 
-            var statusRes = DbContext.Status
-              .Where(m => m.Id == searchViewModel.StatusId)
-              .Select(x => new { x.Id, x.Status1 });
+            //var statusRes = DbContext.Status
+            //  .Where(m => m.Id == searchViewModel.StatusId)
+            //  .Select(x => new { x.Id, x.Status1 });
 
 
             /***** Advanced Search ******/
@@ -144,7 +144,12 @@ namespace adminlte.Controllers
                 return View("_CreatePartial", IJPDetail);
             }
 
-            return Content("success");
+            if (Request.IsAjaxRequest())
+            {
+                return Content("success");
+            }
+
+            return RedirectToAction("Index");
         }
 
         private IJPDetail MaptoModel(IJPDetailModel assetVM)
@@ -157,7 +162,6 @@ namespace adminlte.Controllers
                 LastDate = assetVM.LastDate,
                 ApplicationReceived = assetVM.ApplicationReceived,
                 Quantity = assetVM.Quantity,
-                //Status = assetVM.Status,
                 StatusId = assetVM.StatusId
                 
             };
@@ -176,6 +180,13 @@ namespace adminlte.Controllers
                                                                     .Select(x => new { x.Id, x.Status1 }),
                                                                       "Id",
                                                                       "Status1");
+
+            //advancedSearchViewModel.StatusList = new SelectList(DbContext.IJPDetails
+            //                                                      .GroupBy(x => x.Status.Id)
+            //                                                               .Where(x => x.Key != null && !x.Key.Equals(string.Empty))
+            //                                                               .Select(x => new { Job = x.Key }),
+            //                                                        "Id",
+            //                                                        "Id");
 
             advancedSearchViewModel.JobList = new SelectList(DbContext.IJPDetails
                                                                            .GroupBy(x => x.Job)
@@ -255,6 +266,63 @@ namespace adminlte.Controllers
 
         }
 
+
+
+        public async Task<ActionResult> Details(int id)
+        {
+            var asset = await DbContext.IJPDetails.FirstOrDefaultAsync(x => x.Id == id);
+            var assetVM = MapToViewModel(asset);
+
+            if (Request.IsAjaxRequest())
+                return PartialView("_detailsPartial", assetVM);
+
+            return View(assetVM);
+        }
+
+
+
+
+        // GET: Asset/Delete/5
+        public ActionResult Delete(int id)
+        {
+            var asset = DbContext.IJPDetails.FirstOrDefault(x => x.Id == id);
+
+            IJPDetailModel assetViewModel = MapToViewModel(asset);
+
+            if (Request.IsAjaxRequest())
+                return PartialView("_DeletePartial", assetViewModel);
+            return View(assetViewModel);
+        }
+
+        // POST: Asset/Delete/5
+        [HttpPost, ActionName("Delete")]
+        public async Task<ActionResult> DeleteAsset(int Id)
+        {
+            var asset = new IJPDetail { Id = Id };
+            DbContext.IJPDetails.Attach(asset);
+            DbContext.IJPDetails.Remove(asset);
+
+            var task = DbContext.SaveChangesAsync();
+            await task;
+
+            if (task.Exception != null)
+            {
+                ModelState.AddModelError("", "Unable to Delete the Asset");
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                IJPDetailModel assetVM = MapToViewModel(asset);
+                return View(Request.IsAjaxRequest() ? "_DeletePartial" : "Delete", assetVM);
+            }
+
+            if (Request.IsAjaxRequest())
+            {
+                return Content("success");
+            }
+
+            return RedirectToAction("Index");
+
+        }
+
+
         private IJPDetailModel MapToViewModel(IJPDetail asset)
         {
             var status = DbContext.Status.Where(x => x.Id == asset.StatusId).FirstOrDefault();
@@ -267,7 +335,6 @@ namespace adminlte.Controllers
                 LastDate = asset.LastDate,
                 ApplicationReceived = asset.ApplicationReceived,
                 Quantity =  asset.Quantity,
-
 
                 Status = status != null ? status.Status1 : String.Empty,
                 StatusId = status.Id,

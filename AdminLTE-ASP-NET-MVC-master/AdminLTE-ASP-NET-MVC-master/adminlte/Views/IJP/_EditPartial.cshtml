@@ -14,31 +14,31 @@
                     @Html.HiddenFor(model => model.Id)
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Job, new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Job, new { @class = "control-label col-md-5" })
+                        <div class="col-md-6">
                             @Html.EditorFor(model => model.Job)
                             @Html.ValidationMessageFor(model => model.Job)
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Experience, new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Experience, new { @class = "control-label col-md-5" })
+                        <div class="col-md-6">
                             @Html.EditorFor(model => model.Experience)
                             @Html.ValidationMessageFor(model => model.Experience)
                         </div>
                     </div>
 
                     @*<div class="form-group">
-                        @Html.LabelFor(model => model.LastDate, new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.LastDate, new { @class = "control-label col-md-5" })
+                        <div class="col-md-6">
                             @Html.EditorFor(model => model.LastDate)
                             @Html.ValidationMessageFor(model => model.LastDate)
                         </div>
                     </div>*@
 
-                    <div class="form-group input-group-sm">
-                        @Html.LabelFor(model => model.LastDate, new { @class = "control-label col-md-2" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LastDate, new { @class = "control-label col-md-5" })
                         <div class="col-md-4">
                             @*@Html.LabelFor(model => model.LastDate)*@
                             @Html.TextBoxFor(model => model.LastDate, new { @class = "form-control datepicker", placeholder = "Enter Drop-off date here..." })
@@ -48,13 +48,9 @@
 
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ApplicationReceived, new { @class = "control-label col-md-2" })
-                        @*<div class="col-md-10">
-                            @Html.EditorFor(model => model.ApplicationReceived)
-                            @Html.ValidationMessageFor(model => model.ApplicationReceived)
-                        </div>*@
+                        @Html.LabelFor(model => model.ApplicationReceived, new { @class = "control-label col-md-5" })
+                        
                         <div class="col-md-4">
-                            @*@Html.LabelFor(model => model.LastDate)*@
                             @Html.TextBoxFor(model => model.ApplicationReceived, new { @class = "form-control datepicker", placeholder = "Enter Drop-off date here..." })
                             @Html.ValidationMessageFor(model => model.ApplicationReceived)
                         </div>
@@ -62,8 +58,8 @@
 
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-5" })
+                        <div class="col-md-6">
                             @Html.EditorFor(model => model.Quantity)
                             @Html.ValidationMessageFor(model => model.Quantity)
                         </div>
@@ -73,8 +69,8 @@
 
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.StatusId, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
+                        @Html.LabelFor(model => model.StatusId, htmlAttributes: new { @class = "control-label col-md-5" })
+                        <div class="col-md-6">
                             @Html.DropDownListFor(model => model.StatusId, Model.StatusSelectList, "Select One", new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "text-danger" })
                         </div>
@@ -87,7 +83,7 @@
             </div>
             <div class="modal-footer">
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
+                    <div class="col-md-offset-2 col-md-6">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <input type="submit" class="btn btn-primary" value="Save changes" />
                     </div>

@@ -1,0 +1,66 @@
+﻿@model adminlte.Models.IJPDetailModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Asset Details</h4>
+
+        </div>
+
+        <div class="modal-body">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Job)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Job)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Experience)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Experience)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LastDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LastDate)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ApplicationReceived)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ApplicationReceived)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Quantity)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Status)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Status)
+                </dd>
+
+            </dl>
+
+        </div>
+
+    </div>
+</div>
