@@ -11,7 +11,7 @@ namespace adminlte.Models
     {
 
         [Display(Name = "Status")]
-        public int StatusId { get; set; }
+        public int Status { get; set; }
 
 
          [Display(Name = "Job")]

@@ -15,10 +15,10 @@
                     <div class="form-horizontal">
                         <hr />
                         <div class="form-group">
-                            @Html.LabelFor(model => model.StatusId, htmlAttributes: new { @class = "control-label col-md-3" })
+                            @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
                                 <div class="dropdown">
-                                    @Html.DropDownListFor(model => model.StatusId, Model.StatusList, "Any", new { @class = "form-control" })
+                                    @Html.DropDownListFor(model => model.Status, Model.StatusList, "Any", new { @class = "form-control" })
                                 </div>
                             </div>
                         </div>

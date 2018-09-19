@@ -79,8 +79,8 @@ namespace adminlte.Controllers
 
 
             /***** Advanced Search ******/
-            if (searchViewModel.StatusId != 0)
-                query = query.Where(x => x.Status.Id == searchViewModel.StatusId);
+            if (searchViewModel.Status != 0)
+                query = query.Where(x => x.StatusId == searchViewModel.Status);
 
             if (searchViewModel.Job != null)
                 query = query.Where(x => x.Job == searchViewModel.Job);
@@ -152,22 +152,7 @@ namespace adminlte.Controllers
             return RedirectToAction("Index");
         }
 
-        private IJPDetail MaptoModel(IJPDetailModel assetVM)
-        {
-            IJPDetail asset = new IJPDetail()
-            {
-                Id = assetVM.Id,
-                Job = assetVM.Job,
-                Experience = assetVM.Experience,
-                LastDate = assetVM.LastDate,
-                ApplicationReceived = assetVM.ApplicationReceived,
-                Quantity = assetVM.Quantity,
-                StatusId = assetVM.StatusId
-                
-            };
-
-            return asset;
-        }
+        
 
 
 
@@ -181,12 +166,7 @@ namespace adminlte.Controllers
                                                                       "Id",
                                                                       "Status1");
 
-            //advancedSearchViewModel.StatusList = new SelectList(DbContext.IJPDetails
-            //                                                      .GroupBy(x => x.Status.Id)
-            //                                                               .Where(x => x.Key != null && !x.Key.Equals(string.Empty))
-            //                                                               .Select(x => new { Job = x.Key }),
-            //                                                        "Id",
-            //                                                        "Id");
+           
 
             advancedSearchViewModel.JobList = new SelectList(DbContext.IJPDetails
                                                                            .GroupBy(x => x.Job)
@@ -195,15 +175,7 @@ namespace adminlte.Controllers
                                                                   "Job",
                                                                   "Job");
 
-            //advancedSearchViewModel.StatusList = new SelectList(new List<SelectListItem>
-            //{
-            //                                                      new SelectListItem { Text="Issued",Value=bool.TrueString},
-            //                                                      new SelectListItem { Text="Not Issued",Value = bool.FalseString}
-            //                                                      },
-            //                                                      "Value",
-            //                                                      "Text"
-            //                                                    );
-
+          
             return View("_AdvancedSearchPartial", advancedSearchViewModel);
         }
 
@@ -322,6 +294,25 @@ namespace adminlte.Controllers
 
         }
 
+
+        private IJPDetail MaptoModel(IJPDetailModel assetVM)
+        {
+            var status = DbContext.Status.Where(x => x.Id == assetVM.StatusId).FirstOrDefault();
+            IJPDetail asset = new IJPDetail()
+            {
+                Id = assetVM.Id,
+                Job = assetVM.Job,
+                Experience = assetVM.Experience,
+                LastDate = assetVM.LastDate,
+                ApplicationReceived = assetVM.ApplicationReceived,
+                Quantity = assetVM.Quantity,
+                StatusId = assetVM.StatusId
+
+
+            };
+
+            return asset;
+        }
 
         private IJPDetailModel MapToViewModel(IJPDetail asset)
         {
