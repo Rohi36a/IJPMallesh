@@ -92,8 +92,9 @@
                                 "url": "@Url.Action("Get","IJP")",
                                 "data": function (data) {
 
+                                    console.log(data);
 
-                                    data.Status = $("#Status").val();
+                                    data.StatusId = $("#StatusId").val();
                                     data.Job = $("#Job").val();
 
                                     //data.LastDate = $("#LastDate").val();

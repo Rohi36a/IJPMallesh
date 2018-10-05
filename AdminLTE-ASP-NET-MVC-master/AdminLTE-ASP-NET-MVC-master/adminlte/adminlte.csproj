@@ -182,7 +182,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\ChartsController.cs" />
+    <Compile Include="Controllers\CustomerOrderController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\DataChartsController.cs" />
     <Compile Include="Controllers\ExamplesController.cs" />
     <Compile Include="Controllers\FormsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -197,9 +199,30 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CustomHelperBase.cs" />
     <Compile Include="Helpers\HTMLHelperExtensions.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdvancdedSearchModel.cs" />
+    <Compile Include="Models\Customer.cs">
+      <DependentUpon>DashBoard.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DashBoard.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DashBoard.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DashBoard.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DashBoard.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DashBoard.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DashBoard.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DataCharts\AdvSearchData.cs" />
+    <Compile Include="Models\ProductsViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IJP.Context.cs">
       <AutoGen>True</AutoGen>
@@ -221,6 +244,15 @@
     </Compile>
     <Compile Include="Models\IJPDetailModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Order.cs">
+      <DependentUpon>DashBoard.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OrderDetail.cs">
+      <DependentUpon>DashBoard.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Product.cs">
+      <DependentUpon>DashBoard.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Status.cs">
       <DependentUpon>IJP.tt</DependentUpon>
     </Compile>
@@ -296,6 +328,35 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\Cars\Audi.png" />
+    <Content Include="Images\Cars\Bmw.png" />
+    <Content Include="Images\Cars\Toyota.png" />
+    <Content Include="Images\Cars\Volkswagen.png" />
+    <Content Include="Images\Clothing\Boots.png" />
+    <Content Include="Images\Clothing\Jacket.png" />
+    <Content Include="Images\Clothing\Jeans.png" />
+    <Content Include="Images\Clothing\Suit.png" />
+    <Content Include="Images\Clothing\tshirt.png" />
+    <Content Include="Images\Customers\alexia.png" />
+    <Content Include="Images\Customers\mahdi.png" />
+    <Content Include="Images\Customers\sara.png" />
+    <Content Include="Images\Customers\tarik.png" />
+    <Content Include="Images\Electronics\Camera.png" />
+    <Content Include="Images\Electronics\Keyboard.png" />
+    <Content Include="Images\Electronics\Laptop.png" />
+    <Content Include="Images\Electronics\Microphone.png" />
+    <Content Include="Images\Electronics\Mouse.png" />
+    <Content Include="Images\Electronics\Printer.png" />
+    <Content Include="Models\DashBoard.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DashBoard.edmx</DependentUpon>
+      <LastGenOutput>DashBoard.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DashBoard.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DashBoard.edmx</DependentUpon>
+      <LastGenOutput>DashBoard.cs</LastGenOutput>
+    </Content>
     <Content Include="Models\IJP.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>IJP.edmx</DependentUpon>
@@ -4176,6 +4237,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\CustomerOrder\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -4190,6 +4252,13 @@
     </EntityDeploy>
     <Content Include="Models\IJP.edmx.diagram">
       <DependentUpon>IJP.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\DashBoard.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DashBoard.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DashBoard.edmx.diagram">
+      <DependentUpon>DashBoard.edmx</DependentUpon>
     </Content>
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\adminlte\components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css.map" />
@@ -4279,6 +4348,11 @@
     <Content Include="Views\IJP\_EditPartial.cshtml" />
     <Content Include="Views\IJP\_detailsPartial.cshtml" />
     <Content Include="Views\IJP\_DeletePartial.cshtml" />
+    <Content Include="Views\DataCharts\DataChart.cshtml" />
+    <Content Include="Views\DataCharts\GetDetails.cshtml" />
+    <Content Include="Views\DataCharts\TopCustomers.cshtml" />
+    <Content Include="Views\DataCharts\Index.cshtml" />
+    <Content Include="Views\DataCharts\_AdvancedSearchPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

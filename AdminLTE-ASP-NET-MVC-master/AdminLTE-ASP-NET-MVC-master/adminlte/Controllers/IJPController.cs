@@ -73,14 +73,9 @@ namespace adminlte.Controllers
             }
 
 
-            //var statusRes = DbContext.Status
-            //  .Where(m => m.Id == searchViewModel.StatusId)
-            //  .Select(x => new { x.Id, x.Status1 });
-
-
             /***** Advanced Search ******/
-            if (searchViewModel.Status != 0)
-                query = query.Where(x => x.StatusId == searchViewModel.Status);
+            if (searchViewModel.StatusId != 0)
+                query = query.Where(x => x.StatusId == searchViewModel.StatusId);
 
             if (searchViewModel.Job != null)
                 query = query.Where(x => x.Job == searchViewModel.Job);
@@ -129,8 +124,8 @@ namespace adminlte.Controllers
 
             IJPDetail.StatusSelectList = GetStatusSelectList();
 
-            if (!ModelState.IsValid)
-                return View("_CreatePartial", IJPDetail);
+            //if (!ModelState.IsValid)
+            //    return View("_CreatePartial", IJPDetail);
 
             IJPDetail asset = MaptoModel(IJPDetail);
 
@@ -141,7 +136,8 @@ namespace adminlte.Controllers
             if (task.Exception != null)
             {
                 ModelState.AddModelError("", "Unable to add the Asset");
-                return View("_CreatePartial", IJPDetail);
+                //return View("_CreatePartial", IJPDetail);
+                return RedirectToAction("Index");
             }
 
             if (Request.IsAjaxRequest())
