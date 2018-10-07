@@ -4200,6 +4200,8 @@
     <Content Include="Scripts\adminlte\plugins\timepicker\bootstrap-timepicker.min.css" />
     <Content Include="Scripts\adminlte\plugins\timepicker\bootstrap-timepicker.min.js" />
     <Content Include="Scripts\BIA.Net\DataTable.js" />
+    <Content Include="Scripts\corechart.js" />
+    <Content Include="Scripts\jsapi.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -4237,7 +4239,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\CustomerOrder\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -4352,7 +4353,7 @@
     <Content Include="Views\DataCharts\GetDetails.cshtml" />
     <Content Include="Views\DataCharts\TopCustomers.cshtml" />
     <Content Include="Views\DataCharts\Index.cshtml" />
-    <Content Include="Views\DataCharts\_AdvancedSearchPartial.cshtml" />
+    <Content Include="Views\DataCharts\AdvancedSearchCustomer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

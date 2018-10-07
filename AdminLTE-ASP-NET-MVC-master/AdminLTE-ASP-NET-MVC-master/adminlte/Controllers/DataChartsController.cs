@@ -1,4 +1,6 @@
 ﻿using adminlte.Models;
+using adminlte.Models.DataCharts;
+using DataTables.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace adminlte.Controllers
 
         //DashboardOrderEntities doe = new DashboardOrderEntities();
 
+        DashboardOrderEntities _context = new DashboardOrderEntities();
         //
         // GET: /DataCharts/
         public ActionResult Index()
@@ -21,26 +24,34 @@ namespace adminlte.Controllers
 
 
         [HttpGet]
-        public ActionResult AdvancedSearch()
+        public ActionResult AdvancedSearchCustomer()
         {
-            var advancedSearchViewModel = new AdvancdedSearchModel();
+            var advSearchData = new AdvSearchData();
 
-            //advancedSearchViewModel.StatusList = new SelectList(DbContext.Status
-            //                                                        .Select(x => new { x.Id, x.Status1 }),
+            //advSearchData.CustomerEmailList = new SelectList(_context.Customers
+            //                                                        .Select(x => new { x.CustomerEmail, x. }),
             //                                                          "Id",
             //                                                          "Status1");
 
 
 
-            //advancedSearchViewModel.JobList = new SelectList(DbContext.IJPDetails
-            //                                                               .GroupBy(x => x.Job)
-            //                                                               .Where(x => x.Key != null && !x.Key.Equals(string.Empty))
-            //                                                               .Select(x => new { Job = x.Key }),
-            //                                                      "Job",
-            //                                                      "Job");
+            advSearchData.CustomerEmailList = new SelectList(_context.Customers
+                                                                           .GroupBy(x => x.CustomerEmail)
+                                                                           .Where(x => x.Key != null && !x.Key.Equals(string.Empty))
+                                                                           .Select(x => new { CustomerEmail = x.Key }),
+                                                                  "CustomerEmail",
+                                                                  "CustomerEmail");
 
 
-            return View("_AdvancedSearchPartial", advancedSearchViewModel);
+            advSearchData.CustomerPhoneList = new SelectList(_context.Customers
+                                                                           .GroupBy(x => x.CustomerPhone)
+                                                                           .Where(x => x.Key != null && !x.Key.Equals(string.Empty))
+                                                                           .Select(x => new { CustomerPhone = x.Key }),
+                                                                  "CustomerPhone",
+                                                                  "CustomerPhone");
+
+
+            return View("AdvancedSearchCustomer", advSearchData);
 
         }
 
@@ -191,6 +202,82 @@ namespace adminlte.Controllers
             return Json(new { result = ordersByCustomer }, JsonRequestBehavior.AllowGet);
         }
 
+
+
+        private IQueryable<Customer> SearchAssets(IDataTablesRequest requestModel, AdvSearchData searchViewModel, IQueryable<Customer> query)
+        {
+            // Apply filters
+            if (requestModel.Search.Value != string.Empty)
+            {
+                var value = requestModel.Search.Value.Trim();
+                query = query.Where(p => p.CustomerEmail.Contains(value) ||
+                                        p.CustomerPhone.Contains(value) ||
+                                        p.CustomerName.Contains(value) ||
+                                        p.CustomerCountry.Contains(value)
+                                   );
+
+            }
+
+
+            /***** Advanced Search ******/
+            if (searchViewModel.CustomerEmail != null)
+                query = query.Where(x => x.CustomerEmail.Equals(searchViewModel.CustomerEmail));
+
+            if (searchViewModel.CustomerPhone != null)
+                query = query.Where(x => x.CustomerPhone.Equals(searchViewModel.CustomerPhone));
+
+            /***** Advanced Search ******/
+
+            var filteredCount = query.Count();
+
+            // Sort
+            var sortedColumns = requestModel.Columns.GetSortedColumns();
+            var orderByString = String.Empty;
+
+            foreach (var column in sortedColumns)
+            {
+                orderByString += orderByString != String.Empty ? "," : "";
+                orderByString += (column.Data) + (column.SortDirection == Column.OrderDirection.Ascendant ? " asc" : " desc");
+            }
+
+            //query = query.OrderBy(orderByString == string.Empty ? "BarCode asc" : orderByString);
+
+            return query;
+        }
+
+        public ActionResult GetCustomers([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel, AdvSearchData searchViewModel)
+        {
+            IQueryable<Customer> query = _context.Customers;
+            var totalCount = query.Count();
+
+            // searching and sorting
+            query = SearchAssets(requestModel, searchViewModel, query);
+            var filteredCount = query.Count();
+
+
+
+
+            // Paging
+            query = query.OrderBy(m => m.ID).Skip(requestModel.Start).Take(requestModel.Length);
+
+
+
+            var data = query.Select(CST => new
+            {
+                ID = CST.ID,
+                CustomerEmail = CST.CustomerEmail,
+                CustomerName = CST.CustomerName,
+                CustomerPhone = CST.CustomerPhone,
+                CustomerCountry = CST.CustomerCountry,
+                CustomerImage = CST.CustomerImage
+                //Quantity = IJP,
+
+            }).ToList();
+
+
+            return Json(new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), JsonRequestBehavior.AllowGet);
+
+        }
 
 
     }

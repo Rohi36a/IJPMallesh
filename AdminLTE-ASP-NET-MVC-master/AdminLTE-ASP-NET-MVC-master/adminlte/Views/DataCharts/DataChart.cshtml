@@ -190,6 +190,11 @@
                     <div class="panel-heading">
                         <i class="fa fa-clock-o fa-fw"></i> CUSTOMERS LIST
                     </div>
+                    @*<div class="active" data-toggle="modal" data-target="#AdvSearchData" id="advancedsearch-button">Advanced Search</div>*@
+                    @*<button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#AdvSearchData" id="advancedsearch-button">Advanced Search</button>*@
+                    <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#advSearchData" id="advancedsearch-button">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Advanced Search
+                    </button>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <table id="myDataTable" class="table table-bordered table-striped table-hover">
@@ -230,7 +235,17 @@
                     </div>
                     <!-- /.panel-body -->
                 </div>
+
+
                 <!-- /.panel -->
+
+
+                @*<button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#advSearchData" id="advancedsearch-button">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Advanced Search
+                </button>*@
+
+                @*<a class="btn btn-primary btn-sm" onclick="Edit('@Url.Action("Edit", "IJP")')"><i class="fa fa-pencil fa-lg"></i></a>
+                <a class="btn btn-danger btn-sm" onclick="Delete('@Url.Action("Delete", "IJP")')"><i class="fa fa-trash fa-lg"></i></a>*@
             </div>
             <!-- /.col-lg-4 -->
         </div>
@@ -255,250 +270,322 @@
     </div>
 </div>
 
-@Html.Action("AdvancedSearch")
+@*@Html.Action("AdvancedSearch")*@
+@{ Html.RenderAction("AdvancedSearchCustomer", "DataCharts"); }
 <!-- JS -->
 @section Scripts{
-    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="https://www.google.com/uds/api/visualization/1.0/40ff64b1d9d6b3213524485974f36cc0/format+en,default+en,ui+en,corechart+en.I.js"></script>
-    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/adminlte/components/datatables.net/js/jquery.dataTables.min.js"></script>
+    @*<script type="text/javascript" src="https://www.google.com/jsapi"></script>*@
+    @*<script type="text/javascript" src="https://www.google.com/uds/api/visualization/1.0/40ff64b1d9d6b3213524485974f36cc0/format+en,default+en,ui+en,corechart+en.I.js"></script>*@
+    <script src="~/Scripts/adminlte/components/datatables.net-bs/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jsapi.js"></script>
+    <script src="~/Scripts/corechart.js"></script>
     <script type="text/javascript">
 
-        //Global Variable
-        google.load("visualization", "1", { packages: ["corechart"] });
-
-        $(document).ready(function () {
+    //Global Variable
+    google.load("visualization", "1", { packages: ["corechart"] });
 
 
 
-            //View Details Button
-            $(".viewDetails").click(function () {
+    
+    $(document).ready(function () {
 
-                $(".modal-body").html('');
 
-                $.ajax({
 
-                    type: 'GET',
-                    url: '@Url.Action("GetDetails", "DataCharts")',
-                    data: { type: $(this).attr("data-type") },
-                    success: function (response) {
-                        $(".modal-body").html(response);
-                        $("#exampleModal").modal('show');
-                    },
-                    error: function () {
-                        alert("Something wrong");
-                    }
+        //View Details Button
+        $(".viewDetails").click(function () {
 
-                });
+            $(".modal-body").html('');
+
+            $.ajax({
+
+                type: 'GET',
+                url: '@Url.Action("GetDetails", "DataCharts")',
+                data: { type: $(this).attr("data-type") },
+                success: function (response) {
+                    $(".modal-body").html(response);
+                    $("#exampleModal").modal('show');
+                },
+                error: function () {
+                    alert("Something wrong");
+                }
 
             });
 
-            //Panel Body
+        });
+
+        //Panel Body
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("TopCustomers", "DataCharts")',
+            success: function (response) {
+                $(".topCustomer").html(response);
+            },
+            error: function () {
+                alert("Something Wrong");
+            }
+        });
+
+
+
+
+        function Edit(Url) {
+
             $.ajax({
-                type: 'GET',
-                url: '@Url.Action("TopCustomers", "DataCharts")',
+                type: "GET",
+                url: Url,
                 success: function (response) {
-                    $(".topCustomer").html(response);
-                },
-                error: function () {
-                    alert("Something Wrong");
+                    $("#secondTab").html(response);
+                    $('ul.nav.nav-tabs a:eq(1)').html('Edit');
+                    $('ul.nav.nav-tabs a:eq(1)').tab('show');
                 }
             });
 
+        }
 
 
+        function Delete(Url) {
 
-            //Chart Orders By Country
-            OrdersByCountry()
-
-            //Chart Customer By Country
-            CustomersByCountry()
-
-            //Chart Orders By Customer
-            OrdersByCustomer()
-
-            //Get All Customers
-            CustomerList()
-
-
-            //function  Orders By Country
-            function OrdersByCountry() {
-
+            if (confirm("Are you sure to Delete the Record ?") == true) {
                 $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("OrdersByCountry", "DataCharts")',
+                    type: "POST",
+                    url: Url,
                     success: function (response) {
 
-                        //console.log(response);
+                        if (response.success) {
+                            $("#firstTab").html(response.html);
+                            $.notify(response.message, "warn");
 
-                        var data = new google.visualization.DataTable();
-
-                        data.addColumn('string', 'Country');
-                        data.addColumn('number', 'CountOrders');
-
-                        for (var i = 0; i < response.result.length; i++) {
-                            data.addRow([response.result[i].Country, response.result[i].CountOrders]);
+                            //table related
+                            if (typeof activatejQueryTable !== 'undefined' && $.isFunction(activatejQueryTable))
+                                activatejQueryTable();
                         }
-
-
-                        var chart = new google.visualization.ColumnChart(document.getElementById('orderByCountry'));
-
-                        chart.draw(data,
-                          {
-                              title: "",
-                              position: "top",
-                              fontsize: "14px",
-                              chartArea: { width: '100%' },
-                          });
-                    },
-                    error: function () {
-                        alert("Error loading data!");
+                        else {
+                            $.notify(response.message, "error");
+                        }
                     }
                 });
-
             }
 
-            /*
-          * Custom Label formatter
-          * ----------------------
-          */
-            function labelFormatter(label, series) {
-                return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
-                  + label
-                  + '<br>'
-                  + Math.round(series.percent) + '%</div>'
-            }
+        }
+
+        //Chart Orders By Country
+        OrdersByCountry()
+
+        //Chart Customer By Country
+        CustomersByCountry()
+
+        //Chart Orders By Customer
+        OrdersByCustomer()
+
+        //Get All Customers
+        CustomerList()
 
 
+        //function  Orders By Country
+        function OrdersByCountry() {
 
-            var options = {};
-            var placeholder = $("#customerByCountry");
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("OrdersByCountry", "DataCharts")',
+                success: function (response) {
 
+                    //console.log(response);
 
+                    var data = new google.visualization.DataTable();
 
-            function CustomersByCountry() {
+                    data.addColumn('string', 'Country');
+                    data.addColumn('number', 'CountOrders');
 
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("CustomersByCountry", "DataCharts")',
-                    success: function (response) {
-
-
-                        //console.log(response);
-
-                        var data = new google.visualization.DataTable();
-
-                        data.addColumn('string', 'Country');
-                        data.addColumn('number', 'CountCustomer');
-
-                        for (var i = 0; i < response.result.length; i++) {
-                            data.addRow([response.result[i].Country, response.result[i].CountCustomer]);
-                        }
-
-                        Morris.Donut({
-                            element: 'customerByCountry',
-                            data: response,
-                            resize: true,
-                            colors: ['#87d6c6', '#54cdb4', '#1ab394', '#54cdb4', '#1ab394', '#54cdb4', '#1ab394']
-                        });
-
-                       
-                        var chart = new google.visualization.PieChart(document.getElementById('customerByCountry'));
-
-
-                        chart.draw(data,
-                          {
-                              title: "",
-                              position: "top",
-                              fontsize: "14px",
-                              chartArea: { width: '100%' },
-                          });
-                    },
-                    error: function () {
-                        alert("Error loading data!");
+                    for (var i = 0; i < response.result.length; i++) {
+                        data.addRow([response.result[i].Country, response.result[i].CountOrders]);
                     }
-                });
-
-            }
-
-            function OrdersByCustomer() {
-
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("OrdersByCustomer", "DataCharts")',
-                    success: function (response) {
-
-                        //console.log(response);
-
-                        var data = new google.visualization.DataTable();
-
-                        data.addColumn('string', 'Name');
-                        data.addColumn('number', 'CountOrders');
-
-                        for (var i = 0; i < response.result.length; i++) {
-                            data.addRow([response.result[i].Name[0], response.result[i].CountOrders]);
-                        }
 
 
-                        var chart = new google.visualization.BarChart(document.getElementById('ordersByCustomer'));
+                    var chart = new google.visualization.ColumnChart(document.getElementById('orderByCountry'));
 
-                        chart.draw(data,
-                          {
-                              title: "",
-                              position: "top",
-                              fontsize: "14px",
-                              chartArea: { width: '100%' },
-                          });
-                    },
-                    error: function () {
-                        alert("Error loading data!");
+                    chart.draw(data,
+                      {
+                          title: "",
+                          position: "top",
+                          fontsize: "14px",
+                          chartArea: { width: '100%' },
+                      });
+                },
+                error: function () {
+                    alert("Error loading data!");
+                }
+            });
+
+        }
+
+        /*
+      * Custom Label formatter
+      * ----------------------
+      */
+        function labelFormatter(label, series) {
+            return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
+              + label
+              + '<br>'
+              + Math.round(series.percent) + '%</div>'
+        }
+
+
+
+        var options = {};
+        var placeholder = $("#customerByCountry");
+
+
+
+        function CustomersByCountry() {
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("CustomersByCountry", "DataCharts")',
+                success: function (response) {
+
+
+                    //console.log(response);
+
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Country');
+                    data.addColumn('number', 'CountCustomer');
+
+                    for (var i = 0; i < response.result.length; i++) {
+                        data.addRow([response.result[i].Country, response.result[i].CountCustomer]);
                     }
-                });
+
+                    Morris.Donut({
+                        element: 'customerByCountry',
+                        data: response,
+                        resize: true,
+                        colors: ['#87d6c6', '#54cdb4', '#1ab394', '#54cdb4', '#1ab394', '#54cdb4', '#1ab394']
+                    });
+
+
+                    var chart = new google.visualization.PieChart(document.getElementById('customerByCountry'));
+
+
+                    chart.draw(data,
+                      {
+                          title: "",
+                          position: "top",
+                          fontsize: "14px",
+                          chartArea: { width: '100%' },
+                      });
+                },
+                error: function () {
+                    alert("Error loading data!");
+                }
+            });
+
+        }
+
+        function OrdersByCustomer() {
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("OrdersByCustomer", "DataCharts")',
+                success: function (response) {
+
+                    //console.log(response);
+
+                    var data = new google.visualization.DataTable();
+
+                    data.addColumn('string', 'Name');
+                    data.addColumn('number', 'CountOrders');
+
+                    for (var i = 0; i < response.result.length; i++) {
+                        data.addRow([response.result[i].Name[0], response.result[i].CountOrders]);
+                    }
+
+
+                    var chart = new google.visualization.BarChart(document.getElementById('ordersByCustomer'));
+
+                    chart.draw(data,
+                      {
+                          title: "",
+                          position: "top",
+                          fontsize: "14px",
+                          chartArea: { width: '100%' },
+                      });
+                },
+                error: function () {
+                    alert("Error loading data!");
+                }
+            });
+
+        }
+
+        var oTable;
+
+        function CustomerList() {
+            //GET DATA FROM DATABASE TO FILL DATATABLE
+            oTable = {
+                dt: null,
+
+                init: function () {
+                    dt = $(".panel #myDataTable").DataTable({
+
+                        "serverSide": true,
+                        "processing": true,
+                        "ajax": {
+                            //"url": "/CustomerOrder/GetCustomers",
+                            //"type": "GET",
+                            //"dataType": "json",
+
+                            "url": "@Url.Action("GetCustomers", "DataCharts")",
+                                "data": function (data) {
+
+                                    console.log(data);
+
+                                    data.CustomerEmail = $("#CustomerEmail").val();
+                                    data.CustomerPhone = $("#CustomerPhone").val();
+
+                                    //data.LastDate = $("#LastDate").val();
+                                    //ToJavaScriptDate(data.LastDate);
+
+                                    //data.ApplicationReceived = $("#ApplicationReceived").val();
+                                    //ToJavaScriptDate(data.ApplicationReceived);
+                                }
+                            },
+
+                            "columns": [
+                                {
+                                    "data": "CustomerImage", "width": "50px", "render": function (data) {
+                                        return '<img class="rounded img-thumbnail" style="width:60px; height:58px;" src="/Images/Customers/' + data + '"/>';
+                                    }
+                                },
+                                { "data": "ID", "autowidth": true },
+                                { "data": "CustomerName", "autowidth": true },
+                                { "data": "CustomerEmail", "autowidth": true },
+                                { "data": "CustomerPhone", "autowidth": true },
+                                { "data": "CustomerCountry", "autowidth": true }
+                                
+                                
+                        ]
+                    });
+
+
+                },
+
+                refresh: function () {
+                    dt.ajax.reload();
+                }
+
 
             }
-
-            function CustomerList() {
-                //GET DATA FROM DATABASE TO FILL DATATABLE
-                var oTable = $(".panel #myDataTable").DataTable({
-
-                    "ajax": {
-                        //"url": "/CustomerOrder/GetCustomers",
-                        //"type": "GET",
-                        //"dataType": "json",
-
-                        "url": "@Url.Action("GetCustomers", "CustomerOrder")",
-                        "data": function (data) {
-
-                            console.log(data);
-
-                            //data.StatusId = $("#StatusId").val();
-                            //data.Job = $("#Job").val();
-
-                            //data.LastDate = $("#LastDate").val();
-                            //ToJavaScriptDate(data.LastDate);
-
-                            //data.ApplicationReceived = $("#ApplicationReceived").val();
-                            //ToJavaScriptDate(data.ApplicationReceived);
-                        }
-                    },
-
-                    "columns": [
-                        {
-                            "data": "CustomerImage", "width": "50px", "render": function (data) {
-                                return '<img class="rounded img-thumbnail" style="width:60px; height:58px;" src="/Images/Customers/' + data + '"/>';
-                            }
-                        },
-                        { "data": "ID", "autowidth": true },
-                        { "data": "CustomerName", "autowidth": true },
-                        { "data": "CustomerEmail", "autowidth": true },
-                        { "data": "CustomerPhone", "autowidth": true },
-                        { "data": "CustomerCountry", "autowidth": true }
-                    ]
-                });
-            }
+        }
 
 
-        });
+        // Advanced Search Modal Search button click handler
+        $('#btnPerformAdvancedSearch').on("click", oTable.refresh)
+
+
+        // initialize the datatables
+        oTable.init();
+    });
 
     </script>
 }

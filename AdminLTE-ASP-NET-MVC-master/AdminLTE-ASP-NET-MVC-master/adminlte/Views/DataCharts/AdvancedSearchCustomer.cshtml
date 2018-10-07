@@ -1,0 +1,47 @@
+﻿
+@model adminlte.Models.DataCharts.AdvSearchData
+@{
+    Layout = null;
+}
+
+<div class="modal fade" id="advSearchData" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Advanced Search</h4>
+            </div>
+            @using (Html.BeginForm("GetCustomers", "DataCharts", FormMethod.Get, new { id = "frmAdvancedSearch", @class = "form-horizontal", role = "form" }))
+            {
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <hr />
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CustomerEmail, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                <div class="dropdown">
+                                    @Html.DropDownListFor(model => model.CustomerEmail, Model.CustomerEmailList, "Any", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CustomerPhone, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                <div class="dropdown">
+                                    @Html.DropDownListFor(model => model.CustomerPhone, Model.CustomerPhoneList, "Any", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnPerformAdvancedSearch" type="button" class="btn btn-default btn-success" data-dismiss="modal">Search</button>
+                    <button id="btnCancel" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
